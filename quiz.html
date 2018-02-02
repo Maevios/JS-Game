@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script type="text/javascript" src="quiz.json"></script>
+<title>Simple Quiz with arrays</title>
+<body>
+    <p id="message"></p>
+    </body>
+<script type="text/javascript">
+    
+    var userAnswer;
+    var corrQuest = 0;
+/*
+	var questions = [							 
+		['How many moons does Earth have?', 1],					 
+		['How many moons does Saturn have?', 31],
+		['How many moons does Venus have?', 0]	
+    ];
+        for(var i = 0; i<questions.length; i++){
+
+            userAnswer = prompt(questions[i][0],'');
+            
+            if(answer == questions[i][1]){   
+                corrQuest++;
+    }
+    }
+
+    document.getElementById('message').innerHTML = "you had " + corrQuest + " out of 3 questions correct."
+
+    */
+
+   //var quiz = quiz = '[{"question" : "How many moons does Earth have?", "answer" : 1},{"question" : "How many moons does Saturn have?", "answer" : 31}]';
+
+
+    var jsonqQuestions = JSON.parse(quiz);
+
+    for(var i = 0; i<jsonqQuestions.length; i++){
+
+        userAnswer = prompt(jsonqQuestions[i].question,'');
+
+     if(userAnswer == jsonqQuestions[i].answer){   
+
+        corrQuest++;
+}
+}
+
+    document.getElementById('message').innerHTML = "you had " + corrQuest + " out of 2 questions correct."
+
+		
+</script>
+</head>
+
+
+</html>
