@@ -18,20 +18,26 @@
 
 <body>
 <button id="trigger">Launch the Rocket!</button>
+<h1 id="msg">Rocket Idle</h1>
 <div id="space">
   <div id="rocket"><img src="rocket.png" height="120" alt="space rocket"/></div>
 </div>
 <script type="text/javascript">
 	
+	// Scope: extend or range of view: Global and local variables
 	var rocket = document.getElementById("rocket"); 
 	var trigger = document.getElementById("trigger"); 
-	
+	var pos = 0;
+	var msg = document.getElementById("msg")
 	trigger.addEventListener('click', launchRocket);
 	
 	function launchRocket() {
-		
-    alert ('Get inspired ;-\): https://www.w3schools.com/howto/howto_js_animate.asp');
-	location.href = "https://www.w3schools.com/howto/howto_js_animate.asp";
+
+//Anonymous function
+	setInterval(function(){pos++, rocket.style.bottom = pos + 'px'}, 5);
+	msg.innerHTML = "Rocket Launched";
+//alert ('Get inspired ;-\): https://www.w3schools.com/howto/howto_js_animate.asp');
+	//location.href = "https://www.w3schools.com/howto/howto_js_animate.asp";
 	
 	}
 	
