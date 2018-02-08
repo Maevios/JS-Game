@@ -34,13 +34,13 @@
    //var quiz = quiz = '[{"question" : "How many moons does Earth have?", "answer" : 1},{"question" : "How many moons does Saturn have?", "answer" : 31}]';
 
 
-    var jsonqQuestions = JSON.parse(quiz);
+    var jsonQuestions = JSON.parse(quiz);
 
-    for(var i = 0; i<jsonqQuestions.length; i++){
+    for(var i = 0; i<jsonQuestions.length; i++){
 
-        userAnswer = prompt(jsonqQuestions[i].question,'');
+        userAnswer = prompt(jsonQuestions[i].question,'');
 
-     if(userAnswer == jsonqQuestions[i].answer){   
+     if(userAnswer == jsonQuestions[i].answer){   
 
         corrQuest++;
 }
