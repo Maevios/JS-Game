@@ -9,7 +9,7 @@ var myGame = (function () {
     
     var userChoice = "";
     var computerChoice = "";
-    var result = "";
+    
     
     /* functions
     var myPrivateFunction; */
