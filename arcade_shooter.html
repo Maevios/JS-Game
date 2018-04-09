@@ -28,7 +28,7 @@ function tick(event) {
 	// I didnt understand the difference between locaToLocal, localToGlobal etc.
 	// It counts +1 sometimes when the bullet si on the same height with the bullet
 	// var pt = target.localToLocal(target.x,target.y,bullet)
-	 if(bullet.hitTest(target.y,target.x)){
+	 if(bullet.hitTest(target.x,target.y)){
 		console.log('hit');
 		score.value++;
 		score.text = score.value;
