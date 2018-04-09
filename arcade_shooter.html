@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+<script type="text/javascript" src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+<script type="text/javascript">
+	
+	// Because of the 
+	
+var gun, target,bullet, w, h; // global variables
+var pressed = false;
+var score;
+	
+function init(){
+	stage = new createjs.Stage("demoCanvas");
+	h = demoCanvas.height;
+	w = demoCanvas.width;
+	addScore();
+	drawGun();
+	drawTarget();
+    window.onkeydown = operateGun;
+	createjs.Ticker.on("tick", tick);
+}
+
+
+function tick(event) {
+	// I didnt understand the difference between locaToLocal, localToGlobal etc.
+	// It counts +1 sometimes when the bullet si on the same height with the bullet
+	// var pt = target.localToLocal(target.x,target.y,bullet)
+	 if(bullet.hitTest(target.y,target.x)){
+		console.log('hit');
+		score.value++;
+		score.text = score.value;
+	 }
+	 if(score.value == 3){
+		 stage.removeChild(gun);
+		 stage.removeChild(score);
+		 stage.removeChild(target);
+		 message = new createjs.Text("You hit the target 3 times!!", "15px Arial", "#000000");
+		 message.x = w /4;
+		 message.y = h/2;
+		 message.value = 
+		 stage.addChild(message);
+	 }
+	 console.log(target.x)
+	stage.update(event); 
+}
+
+function addScore(){
+	score = new createjs.Text(0, "15px Arial", "#000000");
+	score.x = w - 30;
+	score.y = 20;
+	score.value = 0
+	stage.addChild(score);
+}
+	 
+function drawGun(){
+	gun = new createjs.Shape(); // instantiating the shape class
+    gun.graphics.beginFill('red');
+    gun.graphics.drawRect( 0 , 450, 10, 50);
+    gun.x = w/2;
+	guncord = gun.x;
+	stage.addChild(gun);
+	
+}
+	
+function drawTarget(){
+	target = new createjs.Shape(); // instantiating the shape class
+    target.graphics.beginFill('blue');
+    target.graphics.drawRect(0, 0, 30, 10);
+	stage.addChild(target);
+    createjs.Tween.get(target,{loop:true})
+            .to({x:w-30,y:0}, 5000)
+            .to({x:0,y:0}, 5000);           
+}
+
+function operateGun(event){
+	switch(event.keyCode){
+			case 37:
+			console.log('move left');
+			gun.x -= 10;
+			guncord = gun.x;
+			break;
+
+			case 39:
+			console.log('move right');
+			gun.x += 10;
+			guncord = gun.x;
+			break;
+
+			case 32:
+			// bullet();
+				// I am creating here the bullet because if i call a function to shoot the bullet i can do it only once "bullet is not a function"
+			bullet = new createjs.Shape(); 
+			
+			bullet.graphics.beginFill('green');
+			bullet.graphics.drawRect(gun.x, 0, 5, 5);
+			bulletcord =bullet.x;
+			bullet.y = 420;
+			createjs.Tween.get(bullet)
+					.to({y:0}, 2000)
+					.call(function removeBullet(){
+						bullet.graphics.clear();
+					});
+			stage.addChild(bullet);
+            console.log("space");
+			break;
+		}
+}
+
+// function bullet(){
+// 	bullet = new createjs.Shape(); 
+// 	bullet.graphics.clear();
+// 	bullet.graphics.beginFill('green');
+// 	bullet.graphics.drawRect(gun.x, 0, 5, 5);
+// 	bullet.y = 420;
+// 	createjs.Tween.get(bullet)
+// 			.to({y:gun.y - 30}, 2000);
+// 	stage.addChild(bullet);
+// 	console.log("space");
+// }
+
+
+</script>
+<style type="text/css">
+#demoCanvas {
+	border: 1px solid gray;
+	padding: 2px;
+    width: 95vw;
+    height: 95vh;
+}
+</style>
+</head>
+
+<body onload="init();">
+<canvas id="demoCanvas" width="500" height="500"> alternate content </canvas>
+</body>
+</html>
