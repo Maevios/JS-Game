@@ -3,7 +3,8 @@
 // Stage width, height, rendering context (CANVAS, WEBGL, AUTO), HTML container ID  - if empty, game is attached to <body>, object defining the Phaser main game states
 
 var timer, timerEvent, text;
-var level1={
+
+var level2={
  
  create:function(){
 
@@ -11,24 +12,31 @@ var level1={
     timer = game.time.create();
         
     // Create a delayed event 1m and 30s from now
-    timerEvent = timer.add(Phaser.Timer.SECOND * 30, this.endTimer, this);
+    timerEvent = timer.add(Phaser.Timer.SECOND * 15, this.endTimer, this);
     
     // Start the timer
     timer.start();
 
      //add cat sound
-    catScream = game.add.audio('catScream',0.5);
+    bearScream = game.add.audio('bearScream',0.5);
 	// world building / game setup
-	game.add.sprite(0, 0, 'bg');
-	game.add.sprite(0,0,"bg");
+	game.add.sprite(0,0,"bg2");
 	// attaching the catcher
 	catcher = game.add.sprite(game.width / 2, game.height / 2, "catcher");
 	catcher.anchor.setTo(.5,0);
 	game.physics.enable(catcher, Phaser.Physics.ARCADE);
-	
-	// attaching the cat
-	cat = game.add.sprite( Math.random() * game.width, Math.random() * game.height, "cat");
-	game.physics.enable(cat, Phaser.Physics.ARCADE);
+	// bear = game.add.sprite( Math.random() * game.width, Math.random() * game.height, "bear");
+	this.bear = this.add.group();
+        for (var i = 0; i < 10; i++) {
+            let sprite = this.bear.create(game.rnd.between(100, 700), game.rnd.between(50, 550), 'bear');
+            game.physics.enable(sprite);
+            game.physics.arcade.enableBody(sprite);
+            sprite.body.collideWorldBounds = !0;
+            sprite.body.velocity.setTo(60, 60);
+            sprite.body.bounce.set(1, 1);
+            sprite.body.gravity.set(45, 30)
+        }
+	game.physics.enable(this.bear, Phaser.Physics.ARCADE);
 	// invoke game controls
 	cursors = game.input.keyboard.createCursorKeys();
 	
@@ -42,9 +50,6 @@ var level1={
 		fill: 'red'		
 	};
 },
-
-
-
 	
  update:function(){
 	// run the game loop
@@ -65,30 +70,51 @@ var level1={
 	if(cursors.down.isDown && catcher.y<585){
 		catcher.y += 5;
     }
-    
-    if (score.value){
-        game.state.start('level2')
+
+    if (score === 3){
+        this.win();
     }
-	
 	//implementing the HitTest
 	// arguments : objects,callback function
-    game.physics.arcade.overlap(catcher,cat, this.catHitHandler);
+    game.physics.arcade.overlap(this.bear,catcher, this.bearHitHandler);
 },
+
+win:function(){
+    game.world.remove(catcher);
+    game.world.remove(scoreTxt);
+    game.world.remove(bear);
+    score = 0;
+   
+    var instructions = game.add.text(350, 300, 'You win!!', {
+        font: "25px Luckiest Guy",
+        fill: "#fff"
+	})
+	
+	setTimeout(function() {
+        game.state.start("splash1")
+    }, 2000);
+    
+},
+
+lose:function(){
+    game.debug.text("You lose!", 380, 300, "#ff0");
+    game.world.remove(catcher);
+    game.world.remove(scoreTxt);
+    this.endTimer();
+    game.world.remove(bear);
+    score = 0;
+    setTimeout(function() {
+        game.state.start("level2")
+    }, 4000);
+},
+
 render: function () {
     // If our timer is running, show the time in a nicely formatted way, else show 'Done!'
     if (timer.running) {
-        game.debug.text(this.formatTime(Math.round((timerEvent.delay - timer.ms) / 1000)), 750, 30, "#ff0");
-        var counterStyle = {
-            font:'20px Verdana',
-            fill: 'red'		
-        };
+        game.debug.text(this.formatTime(Math.round((timerEvent.delay - timer.ms) / 1000)), 750, 30, );     
     }
     else {
-        game.debug.text("You lose!"+" Refresh", 400, 300, loseStyle);
-        var loseStyle = {
-            font:'20px Verdana',
-            fill: 'red'		
-        };
+       this.lose();
     }
 },
 endTimer: function() {
@@ -103,13 +129,11 @@ formatTime: function(s) {
 },
 
 //extra functionality
- catHitHandler:function(){
+ bearHitHandler:function(bear){
 	console.log('Cat cought');
-	cat.x = Math.random() * game.width;
-	cat.y =Math.random() * game.height;
+	bear.kill();
 	score ++;
     scoreTxt.setText(score.toString());
-    catScream.play();
- 
+    bearScream.play();
 },
 }

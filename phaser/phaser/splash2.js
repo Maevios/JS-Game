@@ -1,15 +1,15 @@
 var ball;
-var splash1={
+var splash2={
  create:function() {
 
     
-    game.add.sprite(0,0,"bg");
-    var instructions = game.add.text(200, 350, '                           Level 1:\n       Use the arrow to move the cather.\nTry to cath 10 cats before the time runs out!', {
+    game.add.sprite(0,0,"bg2");
+    var instructions = game.add.text(150, 350, '                                 Level 2:\nNow try to cath all the bears before the time runs out!\n                 But be careful for the Boss!', {
         font: "25px Luckiest Guy",
         fill: "#fff"
     })
     setTimeout(function() {
-        game.state.start("level1")
+        game.state.start("level2")
     }, 5000);
 
     instructions.y = 0;

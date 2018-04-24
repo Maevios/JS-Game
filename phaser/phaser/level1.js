@@ -27,8 +27,6 @@ var level1={
 	
 	// attaching the cat
     cat = game.add.sprite( Math.random() * game.width, Math.random() * game.height, "cat");
-    // added lifespane because of a bug. When lose() is called after the cat starts to bounce everywhere for 2s
-    cat.lifespan=30000;
 	game.physics.enable(cat, Phaser.Physics.ARCADE);
 	// invoke game controls
 	cursors = game.input.keyboard.createCursorKeys();
@@ -64,8 +62,7 @@ var level1={
 		catcher.y += 5;
     }
 
-    if (score === 10){
-        game.state.start('level2')
+    if (score === 3){
         console.log("win");
         this.win();
     }
@@ -74,30 +71,18 @@ var level1={
     game.physics.arcade.overlap(catcher,cat, this.catHitHandler);
 },
 win:function(){
-    game.world.remove(cat);
     game.world.remove(catcher);
     game.world.remove(scoreTxt);
-    
-    score = 0;
-   
+    game.world.remove(cat);
+   // I havent removed time because it runs the lose() function
     var instructions = game.add.text(350, 300, 'You win!!', {
-        font: "25px Luckiest Guy",
+        font: "25px Verdana",
         fill: "#fff"
     })
     setTimeout(function() {
-        game.state.start("level1")
-    }, 5000);
-},
-
-lose:function(){
-    game.debug.text("You lose!", 380, 300, "#ff0");
-    game.world.remove(catcher);
-    game.world.remove(scoreTxt);
-    game.world.remove(text);
-    score = 0;
-    setTimeout(function() {
-        game.state.start("level1")
-    }, 5000);
+        game.state.start("splash2")
+    }, 2000);
+    
 },
 
 render: function () {
@@ -106,7 +91,15 @@ render: function () {
         game.debug.text(this.formatTime(Math.round((timerEvent.delay - timer.ms) / 1000)), 750, 30, );     
     }
     else {
-       this.lose();
+        game.debug.text("You lose!", 380, 300, "#ff0");
+        game.world.remove(catcher);
+        game.world.remove(scoreTxt);
+        this.endTimer();
+        game.world.remove(cat);
+        score = 0;
+        setTimeout(function() {
+            game.state.start("level1")
+        }, 4000);
     }
 },
 endTimer: function() {
