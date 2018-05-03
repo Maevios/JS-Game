@@ -34,7 +34,7 @@ var level2={
     
 
     game.physics.enable(bear, Phaser.Physics.ARCADE);
-    game.physics.enable(dino.children, Phaser.Physics.ARCADE);
+    game.physics.enable(dino, Phaser.Physics.ARCADE);
 	// invoke game controls
 	cursors = game.input.keyboard.createCursorKeys();
 	
@@ -103,12 +103,15 @@ win:function(){
 },
 
 lose:function(){
-    game.debug.text("You lose!", 380, 300, "#ff0");
     game.world.remove(catcher);
     game.world.remove(scoreTxt);
     game.world.remove(bear);
     game.world.remove(dino);
     score = 0;
+    var instructions = game.add.text(350, 300, 'You Lost..', {
+        font: "20px Luckiest Guy",
+        fill: "#fff"
+    })
     setTimeout(function() {
         game.state.start("level2")
         }, 3000);
