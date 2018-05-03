@@ -2,7 +2,7 @@
 // calling the Phaser Game class with constructor arguments:
 // Stage width, height, rendering context (CANVAS, WEBGL, AUTO), HTML container ID  - if empty, game is attached to <body>, object defining the Phaser main game states
 
-var timer, timerEvent, text,dinoNext;
+var timer, timerEvent, text;
 
 var level2={
  
@@ -83,6 +83,7 @@ win:function(){
     game.world.remove(catcher);
     game.world.remove(scoreTxt);
     game.world.remove(bear);
+    game.world.remove(dino);
     
     score = 0;
    
@@ -107,7 +108,6 @@ lose:function(){
     game.world.remove(scoreTxt);
     game.world.remove(bear);
     game.world.remove(dino);
-    game.world.remove(dinoNext);
     score = 0;
     setTimeout(function() {
         game.state.start("level2")
