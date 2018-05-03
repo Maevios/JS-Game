@@ -62,7 +62,7 @@ var level1={
 		catcher.y += 5;
     }
 
-    if (score === 3){
+    if (score === 10){
         console.log("win");
         this.win();
     }
@@ -79,9 +79,7 @@ win:function(){
         font: "25px Verdana",
         fill: "#fff"
     })
-    setTimeout(function() {
-        game.state.start("splash2")
-    }, 2000);
+    game.state.start("splash2")
     
 },
 

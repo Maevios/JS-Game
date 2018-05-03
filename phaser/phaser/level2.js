@@ -2,7 +2,7 @@
 // calling the Phaser Game class with constructor arguments:
 // Stage width, height, rendering context (CANVAS, WEBGL, AUTO), HTML container ID  - if empty, game is attached to <body>, object defining the Phaser main game states
 
-var timer, timerEvent, text;
+var timer, timerEvent, text,dinoNext;
 
 var level2={
  
@@ -12,7 +12,7 @@ var level2={
     timer = game.time.create();
         
     // Create a delayed event 1m and 30s from now
-    timerEvent = timer.add(Phaser.Timer.SECOND * 15, this.endTimer, this);
+    timerEvent = timer.add(Phaser.Timer.SECOND * 30, this.endTimer, this);
     
     // Start the timer
     timer.start();
@@ -25,18 +25,16 @@ var level2={
 	catcher = game.add.sprite(game.width / 2, game.height / 2, "catcher");
 	catcher.anchor.setTo(.5,0);
 	game.physics.enable(catcher, Phaser.Physics.ARCADE);
-	// bear = game.add.sprite( Math.random() * game.width, Math.random() * game.height, "bear");
-	this.bear = this.add.group();
-        for (var i = 0; i < 10; i++) {
-            let sprite = this.bear.create(game.rnd.between(100, 700), game.rnd.between(50, 550), 'bear');
-            game.physics.enable(sprite);
-            game.physics.arcade.enableBody(sprite);
-            sprite.body.collideWorldBounds = !0;
-            sprite.body.velocity.setTo(60, 60);
-            sprite.body.bounce.set(1, 1);
-            sprite.body.gravity.set(45, 30)
-        }
-	game.physics.enable(this.bear, Phaser.Physics.ARCADE);
+	
+    bear = game.add.sprite( Math.random() * game.width, Math.random() * game.height, "bear");
+    dino = game.add.sprite( Math.random() * game.width - 50, Math.random() * game.height - 50, "dino");
+    dino.width = 100;
+    dino.height = 100;
+
+    
+
+    game.physics.enable(bear, Phaser.Physics.ARCADE);
+    game.physics.enable(dino.children, Phaser.Physics.ARCADE);
 	// invoke game controls
 	cursors = game.input.keyboard.createCursorKeys();
 	
@@ -71,41 +69,50 @@ var level2={
 		catcher.y += 5;
     }
 
-    if (score === 3){
+    if (score === 10){
         this.win();
     }
 	//implementing the HitTest
 	// arguments : objects,callback function
-    game.physics.arcade.overlap(this.bear,catcher, this.bearHitHandler);
+    game.physics.arcade.overlap(bear,catcher, this.bearHitHandler);
+    game.physics.arcade.overlap(dino,catcher, this.lose);
+    
 },
 
 win:function(){
     game.world.remove(catcher);
     game.world.remove(scoreTxt);
     game.world.remove(bear);
+    
     score = 0;
    
     var instructions = game.add.text(350, 300, 'You win!!', {
         font: "25px Luckiest Guy",
         fill: "#fff"
-	})
-	
-	setTimeout(function() {
-        game.state.start("splash1")
-    }, 2000);
+    })
     
+        instructions.y = 0;
+        var bounce=game.add.tween(instructions);
+        bounce.to({ y: 350 }, 1000 + Math.random() * 3000, Phaser.Easing.Bounce.In);
+        bounce.start();
+    
+        setTimeout(function() {
+            game.state.start("splash1")
+            }, 5000);
 },
 
 lose:function(){
     game.debug.text("You lose!", 380, 300, "#ff0");
     game.world.remove(catcher);
     game.world.remove(scoreTxt);
-    this.endTimer();
     game.world.remove(bear);
+    game.world.remove(dino);
+    game.world.remove(dinoNext);
     score = 0;
     setTimeout(function() {
         game.state.start("level2")
-    }, 4000);
+        }, 3000);
+    
 },
 
 render: function () {
@@ -130,10 +137,15 @@ formatTime: function(s) {
 
 //extra functionality
  bearHitHandler:function(bear){
-	console.log('Cat cought');
-	bear.kill();
-	score ++;
+    console.log('Bear cought');
+    bear.x = Math.random() * game.width;
+    bear.y =Math.random() * game.height;
+    dino = game.add.sprite( Math.random() * game.width - 50, Math.random() * game.height - 50, "dino");
+    dino.width = 100;
+    dino.height = 100;
+    score ++;
     scoreTxt.setText(score.toString());
     bearScream.play();
 },
+
 }

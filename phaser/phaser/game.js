@@ -1,6 +1,6 @@
 var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'game')
 	
-var cat, catcher, cursors, scoreTxt;
+var cat, catcher, cursors, scoreTxt,dino;
 
 game.state.add('level1', level1);
 game.state.add("splash1", splash1);

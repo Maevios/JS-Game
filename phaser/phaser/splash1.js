@@ -8,16 +8,17 @@ var splash1={
         font: "25px Luckiest Guy",
         fill: "#fff"
     })
-    setTimeout(function() {
-        game.state.start("level1")
-    }, 5000);
-
-    instructions.y = 0;
-
+        instructions.y = 0;
         var bounce=game.add.tween(instructions);
-    
         bounce.to({ y: 250 }, 1000 + Math.random() * 3000, Phaser.Easing.Bounce.In);
         bounce.start();
+
+        setTimeout(function() {
+        game.state.start("level1")
+        }, 5000);
    
-}
+},
+onComplete:function() {
+    this.tween = game.add.tween(instructions).to( { y: 700 }, 1000, Phaser.Easing.Exponential.Out, true, 2500);
+    }
 }
